@@ -10,9 +10,7 @@ def tree_encode(obj, encoding='utf-8'):
     if isinstance(obj, (list, tuple)):
         return [tree_encode(e, encoding) for e in obj]
     elif isinstance(obj, dict):
-        return {tree_encode(k, encoding): tree_encode(v, encoding) for k, v in obj.iteritems()}
-    elif isinstance(obj, unicode):
-        return obj.encode(encoding)
+        return {tree_encode(k, encoding): tree_encode(v, encoding) for k, v in obj.items()}
     else:
         return obj
 
