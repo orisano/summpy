@@ -103,7 +103,7 @@ Usage:
     options = dict(options)
 
     if len(options) < 2:
-        print _usage
+        print(_usage)
         sys.exit(0)
 
     fname = options['-f']
@@ -123,4 +123,4 @@ Usage:
     sentences, debug_info = summarize(text, char_limit=char_limit)
                                       #sentence_filter=not_too_short)
     for sent in sentences:
-        print sent.strip().encode(encoding)
+        print(sent.strip().encode(encoding))
