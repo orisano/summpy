@@ -76,7 +76,7 @@ class Summarizer(object):
 
             summary, debug_info = summarizer(text, **summarizer_params)
 
-        except Exception, e:
+        except Exception as e:
             return json.dumps({'error': str(e)}, ensure_ascii=False, indent=2)
         else:
             res = json.dumps(
