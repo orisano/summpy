@@ -152,7 +152,7 @@ Usage:
     options = dict(options)
 
     if len(options) < 2:
-        print _usage
+        print(_usage)
         sys.exit(0)
 
     fname = options['-f']
@@ -180,4 +180,4 @@ Usage:
         imp_require=imp_require, **lexrank_params
     )
     for sent in sentences:
-        print sent.strip().encode(encoding)
+        print(sent.strip().encode(encoding))
