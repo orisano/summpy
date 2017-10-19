@@ -1,17 +1,21 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# coding: utf-8
+from __future__ import unicode_literals
 
 import sys
 import getopt
 import codecs
 import collections
+
+from typing import *
+
 import pulp
 
 from . import tools
 
 
 def summarize(text, char_limit, sentence_filter=None, debug=False):
-    '''
+    # type: (Text, int, Optional[Callable[[Text], bool]], bool) -> Tuple[List[Text], dict]
+    """
     select sentences in terms of maximum coverage problem
 
     Args:
@@ -26,7 +30,7 @@ def summarize(text, char_limit, sentence_filter=None, debug=False):
       Text summarization model based on maximum coverage problem and its
       variant. (section 3)
       http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.222.6945
-    '''
+    """
     debug_info = {}
 
     sents = list(tools.sent_splitter_ja(text))
@@ -107,7 +111,7 @@ Usage:
         sys.exit(0)
 
     fname = options['-f']
-    encoding = optoin['-e'] if '-e' in options else 'utf-8'
+    encoding = options['-e'] if '-e' in options else 'utf-8'
     char_limit = int(options['-c']) if '-c' in options else None
 
     if fname == 'stdin':

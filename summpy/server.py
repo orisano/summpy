@@ -1,12 +1,15 @@
-#!/usr/bin/env python
 # coding: utf-8
+from __future__ import unicode_literals
 
 import sys
 import os
 import re
 import getopt
-import cherrypy
 import json
+
+from typing import *
+
+import cherrypy
 
 from . import tools
 
@@ -14,12 +17,13 @@ from . import tools
 class Summarizer(object):
 
     def __init__(self):
-        self.summarizers = {}
+        self.summarizers = {}  # type: Dict[Text, Any]
 
     def get_summarizer(self, name):
-        '''
+        # type: (Text) -> Callable[[Text, Optional[int], Optional[int], Optional[float], bool], Tuple[List[Text], dict]]
+        """
         import summarizers on-demand
-        '''
+        """
         if name in self.summarizers:
             pass
         elif name == 'lexrank':
@@ -32,8 +36,9 @@ class Summarizer(object):
         return self.summarizers[name]
 
     @cherrypy.expose
-    def summarize(self, text=None, algo=u'lexrank', **summarizer_params):
-        '''
+    def summarize(self, text=None, algo='lexrank', **summarizer_params):
+        # type: (Optional[Text], Text, dict) -> Text
+        """
         Args:
           text: text to be summarized
           algo: summarizaion algorithm
@@ -48,7 +53,7 @@ class Summarizer(object):
               summary length (the number of sentences)
             imp_require: (lexrank only)
               cumulative LexRank score [0.0-1.0]
-        '''
+        """
         try:  # TODO: generate more useful error message
             # fix parameter type
             for param, value in summarizer_params.items():

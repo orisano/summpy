@@ -1,5 +1,7 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# coding: utf-8
+from __future__ import unicode_literals
+
+from typing import *
 
 import networkx as nx
 from networkx.exception import NetworkXError
@@ -8,9 +10,9 @@ from networkx.utils import not_implemented_for
 
 @not_implemented_for('multigraph')
 def divrank(G, alpha=0.25, d=0.85, personalization=None,
-            max_iter=100, tol=1.0e-6, nstart=None, weight='weight',
-            dangling=None):
-    '''
+            max_iter=100, tol=1.0e-6, nstart=None, weight='weight', dangling=None):
+    # type: (nx.Graph, float, float, Optional[dict], int, float, Optional[dict], Text, Optional[dict]) -> dict
+    """
     Returns the DivRank (Diverse Rank) of the nodes in the graph.
     This code is based on networkx.pagerank.
 
@@ -22,7 +24,7 @@ def divrank(G, alpha=0.25, d=0.85, personalization=None,
       Qiaozhu Mei and Jian Guo and Dragomir Radev,
       DivRank: the Interplay of Prestige and Diversity in Information Networks,
       http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.174.7982
-    '''
+    """
 
     if len(G) == 0:
         return {}
@@ -82,7 +84,7 @@ def divrank(G, alpha=0.25, d=0.85, personalization=None,
 
     # power iteration: make up to max_iter iterations
     for _ in range(max_iter):
-        xlast = x
+        xlast = x  # type: dict
         x = dict.fromkeys(xlast.keys(), 0)
         danglesum = d * sum(xlast[n] for n in dangling_nodes)
         for n in x:
@@ -105,10 +107,11 @@ def divrank(G, alpha=0.25, d=0.85, personalization=None,
 def divrank_scipy(G, alpha=0.25, d=0.85, personalization=None,
                   max_iter=100, tol=1.0e-6, nstart=None, weight='weight',
                   dangling=None):
-    '''
+    # type: (nx.Graph, float, float, Optional[Any], int, float, Optional[Any], Text, Optional[Any]) -> dict
+    """
     Returns the DivRank (Diverse Rank) of the nodes in the graph.
     This code is based on networkx.pagerank_scipy
-    '''
+    """
     import scipy.sparse
 
     N = len(G)
@@ -152,7 +155,6 @@ def divrank_scipy(G, alpha=0.25, d=0.85, personalization=None,
     else:
         missing = set(nodelist) - set(dangling)
 
-
         if missing:
             raise NetworkXError('Dangling node dictionary '
                                 'must have a value for every node. '
@@ -166,7 +168,7 @@ def divrank_scipy(G, alpha=0.25, d=0.85, personalization=None,
     # power iteration: make up to max_iter iterations
     for _ in range(max_iter):
         xlast = x
-        D_t =  M * x
+        D_t = M * x
         x = (
             d * (x / D_t * M * x + sum(x[is_dangling]) * dangling_weights)
             + (1.0 - d) * p
@@ -208,27 +210,27 @@ if __name__ == '__main__':
         20: [5]
     }
 
-    for u, vs in edges.iteritems():
+    for u, vs in edges.items():
         for v in vs:
             g.add_edge(u, v)
 
     scores = nx.pagerank(g)
-    print '# PageRank'
-    print '# rank: node score'
+    print('# PageRank')
+    print('# rank: node score')
     #print sum(scores.values())
     for i, n in enumerate(sorted(scores, key=lambda n: scores[n], reverse=True)):
-        print '# {}: {} {}'.format(i+1, n, scores[n])
+        print('# {}: {} {}'.format(i+1, n, scores[n]))
 
     scores = divrank(g)
-    print '\n# DivRank'
+    print('\n# DivRank')
     #print sum(scores.values())
-    print '# rank: node score'
+    print('# rank: node score')
     for i, n in enumerate(sorted(scores, key=lambda n: scores[n], reverse=True)):
-        print '# {}: {} {}'.format(i+1, n, scores[n])
+        print('# {}: {} {}'.format(i+1, n, scores[n]))
 
     scores = divrank_scipy(g)
-    print '\n# DivRank (scipy)'
+    print('\n# DivRank (scipy)')
     #print sum(scores.values())
-    print '# rank: node score'
+    print('# rank: node score')
     for i, n in enumerate(sorted(scores, key=lambda n: scores[n], reverse=True)):
-        print '# {}: {} {}'.format(i+1, n, scores[n])
+        print('# {}: {} {}'.format(i+1, n, scores[n]))

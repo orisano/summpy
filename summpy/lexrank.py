@@ -1,10 +1,13 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# coding: utf-8
+from __future__ import unicode_literals
 
 import sys
 import getopt
 import codecs
 import collections
+
+from typing import *
+
 import numpy
 import networkx
 from sklearn.feature_extraction import DictVectorizer
@@ -14,9 +17,9 @@ from . import tools
 from .misc.divrank import divrank, divrank_scipy
 
 
-def lexrank(sentences, continuous=False, sim_threshold=0.1, alpha=0.9,
-            use_divrank=False, divrank_alpha=0.25):
-    '''
+def lexrank(sentences, continuous=False, sim_threshold=0.1, alpha=0.9, use_divrank=False, divrank_alpha=0.25):
+    # type: (List[Text], bool, float, float, bool, float) -> Sequence[Dict[int, float]]
+    """
     compute centrality score of sentences.
 
     Args:
@@ -45,7 +48,7 @@ def lexrank(sentences, continuous=False, sim_threshold=0.1, alpha=0.9,
       LexRank: graph-based lexical centrality as salience in text
       summarization. (section 3)
       http://www.cs.cmu.edu/afs/cs/project/jair/pub/volume22/erkan04a-html/erkan04a.html
-    '''
+    """
     # configure ranker
     ranker_params = {'max_iter': 1000}
     if use_divrank:
@@ -88,9 +91,9 @@ def lexrank(sentences, continuous=False, sim_threshold=0.1, alpha=0.9,
     return scores, sim_mat
 
 
-def summarize(text, sent_limit=None, char_limit=None, imp_require=None,
-              debug=False, **lexrank_params):
-    '''
+def summarize(text, sent_limit=None, char_limit=None, imp_require=None, debug=False, **lexrank_params):
+    # type: (Text, Optional[int], Optional[int], Optional[float], bool, dict) -> Tuple[List[Text], dict]
+    """
     Args:
       text: text to be summarized (unicode string)
       sent_limit: summary length (the number of sentences)
@@ -99,9 +102,9 @@ def summarize(text, sent_limit=None, char_limit=None, imp_require=None,
 
     Returns:
       list of extracted sentences
-    '''
+    """
     debug_info = {}
-    sentences = list(tools.sent_splitter_ja(text))
+    sentences = list(tools.sent_splitter_ja(text))  # type: List[Text]
     scores, sim_mat = lexrank(sentences, **lexrank_params)
     sum_scores = sum(scores.itervalues())
     acc_scores = 0.0

@@ -1,30 +1,31 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# coding: utf-8
+from __future__ import unicode_literals
 
 import os
-import re
-import json
+
+from typing import *
 
 
 def tree_encode(obj, encoding='utf-8'):
+    # type: (Union[list, tuple, dict, Text], Text) -> Union[list, tuple, dict, bytes]
     if isinstance(obj, (list, tuple)):
         return [tree_encode(e, encoding) for e in obj]
     elif isinstance(obj, dict):
         return {tree_encode(k, encoding): tree_encode(v, encoding) for k, v in obj.items()}
     else:
-        return obj
+        return obj.encode(encoding)
 
 
-def sent_splitter_ja(text, delimiters=set(u'。．？！\n\r'),
-                     parenthesis=u'（）「」『』“”'):
-    '''
+def sent_splitter_ja(text, delimiters=set('。．？！\n\r'), parenthesis='（）「」『』“”'):
+    # type: (Text, Set[Text], Text) -> Generator[Text]
+    """
     Args:
       text: unicode string that contains multiple Japanese sentences.
       delimiters: set() of sentence delimiter characters.
       parenthesis: to be checked its correspondence.
     Returns:
       generator that yields sentences.
-    '''
+    """
     paren_chars = set(parenthesis)
     close2open = dict(zip(parenthesis[1::2], parenthesis[0::2]))
     pstack = []
@@ -50,7 +51,7 @@ def sent_splitter_ja(text, delimiters=set(u'。．？！\n\r'),
         yield ''.join(buff)
 
 
-if os.environ.get('SUMMPY_USE_JANOME') is not None:
+if os.getenv("SUMMPY_USE_JANOME"):
     from .misc.janome_segmenter import word_segmenter_ja
 else:
     try:
